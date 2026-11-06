@@ -97,6 +97,35 @@ python3 inference.py --restore_step 30000 --mode single \
 
 Telugu follows the same command pattern inside `Telugu/` once training completes.
 
+## 10. Results at a Glance
+
+### Training & Validation Loss
+
+| Training Loss | Validation Loss |
+|---|---|
+| ![Training Loss](Results/English/training_loss.png) | ![Validation Loss](Results/English/validation_loss.png) |
+
+### Variance-Adaptor Predictions (Example: E1 — longest test sentence)
+
+| Duration | Pitch (F0) | Energy |
+|---|---|---|
+| ![Duration](Results/English/variance_adaptor_plots/duration/E1_duration.png) | ![Pitch](Results/English/variance_adaptor_plots/pitch/E1_pitch.png) | ![Energy](Results/English/variance_adaptor_plots/energy/E1_energy.png) |
+
+See `Results/English/variance_adaptor_plots/` for all 5 sentences × 3 variance types (15 plots total).
+
+### Checkpoint Progression
+
+| Step | Total Loss (Train) | File |
+|---|---|---|
+| 5,000  | 2.0793 | `English/checkpoints/5000.pth.tar` |
+| 10,000 | 1.4624 | `English/checkpoints/10000.pth.tar` |
+| 15,000 | 1.0841 | `English/checkpoints/15000.pth.tar` |
+| 20,000 | 1.0939 | `English/checkpoints/20000.pth.tar` |
+| 25,000 | 1.0624 | `English/checkpoints/25000.pth.tar` |
+| 30,000 (final) | 0.9145 | `English/checkpoints/30000.pth.tar` |
+
+*(All values from the live training log, captured in `loss_history.csv` during training.)*
+
 ## 8. Checkpoints
 
 Checkpoints (~419MB each, 6 per language, every 5,000 steps) are versioned via **Git LFS** per the assignment's guidance for oversized files.
