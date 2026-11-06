@@ -126,6 +126,8 @@ See `Results/English/variance_adaptor_plots/` for all 5 sentences × 3 variance 
 
 *(All values from the live training log, captured in `loss_history.csv` during training.)*
 
+![Checkpoint Progression](Results/English/checkpoint_progression.png)
+
 ## 8. Checkpoints
 
 Checkpoints (~419MB each, 6 per language, every 5,000 steps) are versioned via **Git LFS** per the assignment's guidance for oversized files.
