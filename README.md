@@ -97,7 +97,13 @@ python3 inference.py --restore_step 30000 --mode single \
 
 Telugu follows the same command pattern inside `Telugu/` once training completes.
 
-## 10. Results at a Glance
+## 8. Checkpoints
+
+Checkpoints (~419MB each, 6 per language, every 5,000 steps) are versioned via **Git LFS** per the assignment's guidance for oversized files.
+
+Backup mirror (used live during training for crash recovery after two Kaggle kernel interruptions): https://huggingface.co/Hanushree/fastspeech2-svarah-english
+
+## 9. Results at a Glance
 
 ### Training & Validation Loss
 
@@ -128,17 +134,14 @@ See `Results/English/variance_adaptor_plots/` for all 5 sentences × 3 variance 
 
 ![Checkpoint Progression](Results/English/checkpoint_progression.png)
 
-## 8. Checkpoints
+## 10. Known Limitations & Possible Improvements
 
-Checkpoints (~419MB each, 6 per language, every 5,000 steps) are versioned via **Git LFS** per the assignment's guidance for oversized files.
+Full analysis with supporting plots in `Report/Technical_Report.pdf`. Each limitation below is grounded in observed, plotted evidence rather than general expectation:
 
-Backup mirror (used live during training for crash recovery after two Kaggle kernel interruptions): https://huggingface.co/Hanushree/fastspeech2-svarah-english
+- **Energy decay correlating with vocoder artifacts in longer utterances.** FastSpeech2's variance adaptor (Ren et al., 2021) is non-autoregressive: duration, pitch, and energy are predicted independently per phoneme in a single forward pass, with no mechanism to condition later predictions on accumulated earlier error. On low-resource, noisy training data this is known to compound over longer sequences — observed directly here (`Results/English/variance_adaptor_plots/energy/E1_energy.png`, `E4_energy.png`), where predicted energy declines toward the end of the two longest test sentences (84-85 phonemes), with the corresponding generated audio showing increased vocoder noise in that same region. Neural vocoders including HiFi-GAN are documented to degrade on low-energy / near-silent mel regions, since there is less harmonic structure to reconstruct from. *Possible improvement:* a minimum-energy floor during inference, or duration-aware curriculum training that increases sequence length gradually.
 
-## 9. Known Limitations & Possible Improvements
+- **Thin per-speaker training data.** With 115 pseudo-speakers sharing a 5-hour training budget, each speaker contributes roughly 2.5 minutes of audio — well below the tens of minutes to hours per speaker typically used in multi-speaker TTS literature for stable, speaker-consistent prosody. *Possible improvement:* fewer speakers with more data each, within the same total 5-hour budget specified by the assignment.
 
-Full analysis with supporting plots in `Report/Technical_Report.pdf`. Summary:
+- **Phonemizer limited to its built-in lexicon.** `g2p_en`'s statistical fallback (used for out-of-vocabulary tokens such as "andaroo" in E4) has no mechanism to verify correctness for words outside standard English vocabulary, since it was trained on the CMU Pronouncing Dictionary. There is no ground-truth phoneme sequence to validate such output against. *Possible improvement:* an expanded or domain-specific pronunciation lexicon covering the test set's vocabulary in advance.
 
-- **Energy decay → vocoder degradation in longer utterances** — see Section 5. *Possible improvement:* curriculum training ordered by utterance length, or explicit duration/energy clamping during inference.
-- **Thin per-speaker data** — ~2.5 minutes of audio per pseudo-speaker across 115 speakers limits how precisely the model learns any individual voice. *Possible improvement:* fewer speakers with more audio each, given the same total 5-hour budget.
-- **G2P limitations on OOV and non-English tokens** — the grapheme-to-phoneme tool (`g2p_en`) falls back to statistical prediction for words not in its lexicon (e.g., "andaroo" in E4), with no verified ground-truth pronunciation for such cases. *Possible improvement:* an expanded or domain-specific pronunciation lexicon.
-- **Train/validation loss gap** — consistent ~3.7× separation suggests the model would benefit from regularization (dropout tuning, weight decay) or more validation speakers relative to total speaker count.
+- **Persistent train/validation loss gap.** A consistent ~3.7× separation (0.91 train vs. 3.41 validation at step 30,000, see `Results/English/validation_loss.png`) that does not close over the full 30,000-step run indicates the model is fitting training-speaker-specific patterns rather than generalizing — consistent with the thin-per-speaker-data limitation above, since a speaker embedding has little signal to learn a generalizable identity from 2.5 minutes of audio. *Possible improvement:* stronger regularization (increased dropout, weight decay) or a larger, better-balanced validation set relative to the number of distinct speakers.
