@@ -2,17 +2,10 @@
 
 Implementation and evaluation of **FastSpeech 2** for text-to-speech synthesis in **English** (Svarah) and **Telugu** (IndicTTS Telugu), built on the [ming024/FastSpeech2](https://github.com/ming024/FastSpeech2) reference implementation.
 
-**Submitted by:** Hanushree29 | **Deadline:** 07-11-2026
+**Submitted by:** Hanushree29 | hanushree60@gmail.com
 
-| Component | Status |
-|---|---|
-| English pipeline (preprocess, train, inference) | ✅ Complete |
-| English checkpoints (30,000 steps) | ✅ Complete |
-| English results (loss curves, audio, variance plots) | ✅ Complete |
-| Telugu pipeline | 🔄 In progress |
-| Technical Report | 🔄 In progress |
 
----
+
 
 ## 1. Overview
 
