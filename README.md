@@ -1,140 +1,263 @@
-# FastSpeech2-Based TTS: English & Telugu
+# Multilingual FastSpeech 2 Text-to-Speech System
 
-Implementation and evaluation of **FastSpeech 2** for text-to-speech synthesis in **English** (Svarah) and **Telugu** (IndicTTS Telugu), built on the [ming024/FastSpeech2](https://github.com/ming024/FastSpeech2) reference implementation.
+### English (Svarah) and Telugu
 
-**Submitted by:** Hanushree29 | hanushree60@gmail.com
+A multilingual Text-to-Speech implementation using the FastSpeech 2 architecture.
+This repository contains separate English and Telugu implementations,
+preprocessing pipelines, configurations, checkpoints, inference code and results.
 
+## Languages
 
+| Language | Dataset | Directory |
+|---|---|---|
+| English | AI4Bharat Svarah | `English/` |
+| Telugu | IndicTTS | `Telugu/` |
 
+## Architecture
 
-## 1. Overview
-
-Two independently trained FastSpeech2 models, one per language, each with a full preprocessing → training → inference pipeline, trained checkpoints, generated speech for every required test sentence, duration/pitch/energy variance-adaptor visualizations, training/validation loss curves, and a technical report analyzing results and limitations with evidence from the plots themselves rather than general claims.
-
-## 2. Repository Structure
-
+```text
+Input Text
+    |
+Text Processing / Phoneme Conversion
+    |
+Text Encoder
+    |
+Variance Adaptor
+(Duration, Pitch, Energy)
+    |
+Mel-Spectrogram Decoder
+    |
+HiFi-GAN Vocoder
+    |
+Generated Speech
 ```
-project/
-├── English/            # Code + checkpoints for the English model (Svarah)
-├── Telugu/              # Code + checkpoints for the Telugu model (IndicTTS)
+
+## Repository Structure
+
+```text
+.
+├── English/
+│   ├── audio/
+│   ├── checkpoints/
+│   ├── config/
+│   ├── hifigan/
+│   ├── lexicon/
+│   ├── model/
+│   ├── text/
+│   ├── utils/
+│   ├── dataset.py
+│   ├── preprocess.py
+│   ├── train.py
+│   └── inference.py
+├── Telugu/
+│   ├── audio/
+│   ├── checkpoints/
+│   ├── config/
+│   ├── hifigan/
+│   ├── lexicon/
+│   ├── model/
+│   ├── text/
+│   ├── utils/
+│   ├── dataset.py
+│   ├── preprocess.py
+│   ├── train.py
+│   └── inference.py
 ├── Results/
 │   ├── English/
-│   │   ├── training_loss.png
-│   │   ├── validation_loss.png
-│   │   ├── test_generated_audios/        # E1, E2a, E2b, E3, E4
-│   │   └── variance_adaptor_plots/       # duration/ pitch/ energy/ per sentence
-│   └── Telugu/                           # same structure, for T1-T4
-├── Report/Technical_Report.pdf
-├── README.md
-└── requirements.txt
+│   └── Telugu/
+├── Report/
+├── requirements.txt
+└── README.md
 ```
 
-## 3. Datasets & Subsampling Strategy
+## Model Checkpoints
 
-| Language | Dataset | Train | Val | Speakers |
-|---|---|---|---|---|
-| English | [Svarah](https://huggingface.co/datasets/ai4bharat/Svarah) (AI4Bharat) | 5.01h | 0.99h | 115 pseudo-speakers |
-| Telugu | IndicTTS Telugu | ~5h | ~1h | TBD |
+Large model checkpoints are hosted on Hugging Face.
+The language-specific checkpoint directories contain download links.
 
-**Why pseudo-speakers (English):** Svarah ships no explicit speaker ID field. 115 pseudo-speakers were constructed by combining eight metadata fields (gender, age group, mother tongue, native state/district, qualification, job category, occupation domain) — people sharing all eight are, with high probability, the same or a near-identical speaker. This let the multi-speaker embedding learn meaningful speaker variation despite the missing ground-truth IDs.
+### English
 
-**Split method:** per-pseudo-speaker utterance split (not a random utterance split), guaranteeing zero text/audio overlap between train and validation while keeping every validation speaker also present in training — required for the speaker embedding to generalize rather than encounter unseen IDs at validation time.
+[Hugging Face: Hanushree/fastspeech2-svarah-english](https://huggingface.co/Hanushree/fastspeech2-svarah-english)
 
-**Filtering:** utterances restricted to 1-15 seconds with ≥3 words; resampled to 22.05kHz; silence/background-noise trimmed with `librosa.effects.trim(top_db=30)` prior to forced alignment, removing boundary artifacts that otherwise propagate into training targets.
+| Step | Checkpoint |
+|---:|---|
+| 5,000 | [5000.pth.tar](https://huggingface.co/Hanushree/fastspeech2-svarah-english/resolve/main/5000.pth.tar) |
+| 10,000 | [10000.pth.tar](https://huggingface.co/Hanushree/fastspeech2-svarah-english/resolve/main/10000.pth.tar) |
+| 15,000 | [15000.pth.tar](https://huggingface.co/Hanushree/fastspeech2-svarah-english/resolve/main/15000.pth.tar) |
+| 20,000 | [20000.pth.tar](https://huggingface.co/Hanushree/fastspeech2-svarah-english/resolve/main/20000.pth.tar) |
+| 25,000 | [25000.pth.tar](https://huggingface.co/Hanushree/fastspeech2-svarah-english/resolve/main/25000.pth.tar) |
+| 30,000 | [30000.pth.tar](https://huggingface.co/Hanushree/fastspeech2-svarah-english/resolve/main/30000.pth.tar) |
 
-## 4. Model & Training Configuration
+### Telugu
 
-| Setting | Value | Rationale |
-|---|---|---|
-| Architecture | FastSpeech2 (multi-speaker) | Required by assignment; multi-speaker needed since Svarah has 115 pseudo-speakers |
-| Vocoder | Pretrained universal HiFi-GAN | Bundled with reference repo; avoids a separate multi-hour vocoder training run given the time budget |
-| Alignment | MFA, `english_us_arpa` | Standard pretrained English acoustic model + dictionary for forced duration extraction |
-| Sample rate | 22,050 Hz | Matches HiFi-GAN's pretrained expectation |
-| max_seq_len | 1500 | Raised from the reference default (1000) to accommodate the longest Svarah utterances (~15s ≈ 1300 mel frames) without truncation |
-| Batch size | 16 | Fits comfortably within a single Kaggle T4's 15GB VRAM alongside the multi-speaker embedding table |
-| Training steps | 30,000 | Checkpointed every 5,000 steps; chosen to balance convergence against the ~3.5h/run time budget under the assignment deadline |
-| Hardware | Kaggle, NVIDIA T4 (single GPU) | — |
+[Hugging Face: Hanushree/fastspeech2-telugu-v2](https://huggingface.co/Hanushree/fastspeech2-telugu-v2)
 
-## 5. Results — English (step 30,000)
+| Step | Checkpoint |
+|---:|---|
+| 1,000 | [1000.pth.tar](https://huggingface.co/Hanushree/fastspeech2-telugu-v2/resolve/main/1000.pth.tar) |
+| 2,000 | [2000.pth.tar](https://huggingface.co/Hanushree/fastspeech2-telugu-v2/resolve/main/2000.pth.tar) |
+| 3,000 | [3000.pth.tar](https://huggingface.co/Hanushree/fastspeech2-telugu-v2/resolve/main/3000.pth.tar) |
+| 4,000 | [4000.pth.tar](https://huggingface.co/Hanushree/fastspeech2-telugu-v2/resolve/main/4000.pth.tar) |
+| 5,000 | [5000.pth.tar](https://huggingface.co/Hanushree/fastspeech2-telugu-v2/resolve/main/5000.pth.tar) |
+| 6,000 | [6000.pth.tar](https://huggingface.co/Hanushree/fastspeech2-telugu-v2/resolve/main/6000.pth.tar) |
+| 7,000 | [7000.pth.tar](https://huggingface.co/Hanushree/fastspeech2-telugu-v2/resolve/main/7000.pth.tar) |
+| 8,000 | [8000.pth.tar](https://huggingface.co/Hanushree/fastspeech2-telugu-v2/resolve/main/8000.pth.tar) |
+| 9,000 | [9000.pth.tar](https://huggingface.co/Hanushree/fastspeech2-telugu-v2/resolve/main/9000.pth.tar) |
+| 10,000 | [10000.pth.tar](https://huggingface.co/Hanushree/fastspeech2-telugu-v2/resolve/main/10000.pth.tar) |
+| 11,000 | [11000.pth.tar](https://huggingface.co/Hanushree/fastspeech2-telugu-v2/resolve/main/11000.pth.tar) |
+| 12,000 | [12000.pth.tar](https://huggingface.co/Hanushree/fastspeech2-telugu-v2/resolve/main/12000.pth.tar) |
+| 13,000 | [13000.pth.tar](https://huggingface.co/Hanushree/fastspeech2-telugu-v2/resolve/main/13000.pth.tar) |
+| 14,000 | [14000.pth.tar](https://huggingface.co/Hanushree/fastspeech2-telugu-v2/resolve/main/14000.pth.tar) |
+| 15,000 | [15000.pth.tar](https://huggingface.co/Hanushree/fastspeech2-telugu-v2/resolve/main/15000.pth.tar) |
+| 16,000 | [16000.pth.tar](https://huggingface.co/Hanushree/fastspeech2-telugu-v2/resolve/main/16000.pth.tar) |
+| 17,000 | [17000.pth.tar](https://huggingface.co/Hanushree/fastspeech2-telugu-v2/resolve/main/17000.pth.tar) |
+| 18,000 | [18000.pth.tar](https://huggingface.co/Hanushree/fastspeech2-telugu-v2/resolve/main/18000.pth.tar) |
+| 19,000 | [19000.pth.tar](https://huggingface.co/Hanushree/fastspeech2-telugu-v2/resolve/main/19000.pth.tar) |
+| 20,000 | [20000.pth.tar](https://huggingface.co/Hanushree/fastspeech2-telugu-v2/resolve/main/20000.pth.tar) |
 
-| | Total | Mel | Mel PostNet | Pitch | Energy | Duration |
-|---|---|---|---|---|---|---|
-| **Train** | 0.9145 | 0.4272 | 0.4268 | 0.0204 | 0.0237 | 0.0165 |
-| **Validation** | 3.4104 | 0.9576 | 0.9575 | 0.5367 | 0.7471 | 0.2115 |
+## Training and Validation Graphs
 
-Training loss converges smoothly from ~11.7 to ~0.91 with no instability. Validation loss plateaus early (~step 2,000) around 3.3-3.5 and never closes the gap with training loss — a consistent ~3.7× separation held for the full run (see `Results/English/validation_loss.png`). This is interpreted as **overfitting to the 115 training pseudo-speakers** rather than training instability, since the training curve itself is clean; full discussion in the Technical Report.
+### English
 
-**Variance-adaptor observation:** energy predictions for longer test sentences (E1, E4 — 84-85 phonemes) show a visible decline from the start of the utterance toward the end (see `Results/English/variance_adaptor_plots/energy/`). This decline correlates with audibly increased vocoder artifacts in the corresponding `.wav` files during the same region — low-energy mel frames are a known weak point for HiFi-GAN reconstruction. Shorter test sentences (E2a, E2b, E3 — 37-56 phonemes) do not show the same decay and are audibly cleaner throughout.
+**Checkpoint Progression**
 
-## 6. Adaptations Made to the Reference Implementation
+![checkpoint progression](Results/English/checkpoint_progression.png)
 
-Required to run `ming024/FastSpeech2` on current library versions (NumPy 2.1, PyTorch 2.11) — documented for reproducibility and as evidence of debugging depth beyond default execution:
+**E1 Spectrogram**
 
-1. **`torch.load` compatibility** (`utils/model.py`) — added `weights_only=False, map_location=device`. PyTorch ≥2.6 changed the default to `weights_only=True`, which rejects the repo's legacy checkpoint format (both FastSpeech2 and HiFi-GAN checkpoints).
-2. **NumPy dtype mismatch** (`dataset.py`) — explicit `.astype(np.float32)` added when loading mel/pitch/energy/duration `.npy` arrays. Under NumPy 2.x these load as `float64`, causing `RuntimeError: Found dtype Double but expected Float` during backpropagation.
-3. **Silence/noise trimming** — added to the English raw-data preparation step to reduce vocoder-audible artifacts at utterance boundaries in the noisy, crowd-sourced Svarah recordings.
-4. **Inference-time text normalization** — numerals, times, and dates expanded to words (e.g., "10:45 AM" → "ten forty five A M") to match the convention used when cleaning training transcripts; without this, `g2p_en` phonemizes raw digits into nonsense phoneme sequences.
+![E1 spectrogram](Results/English/test_generated_audios/E1_spectrogram.png)
 
-## 7. Reproducing
+**E2A Spectrogram**
+
+![E2a spectrogram](Results/English/test_generated_audios/E2a_spectrogram.png)
+
+**E2B Spectrogram**
+
+![E2b spectrogram](Results/English/test_generated_audios/E2b_spectrogram.png)
+
+**E3 Spectrogram**
+
+![E3 spectrogram](Results/English/test_generated_audios/E3_spectrogram.png)
+
+**E4 Spectrogram**
+
+![E4 spectrogram](Results/English/test_generated_audios/E4_spectrogram.png)
+
+**Training Loss**
+
+![training loss](Results/English/training_loss.png)
+
+**Validation Loss**
+
+![validation loss](Results/English/validation_loss.png)
+
+**E1 Duration**
+
+![E1 duration](Results/English/variance_adaptor_plots/duration/E1_duration.png)
+
+**E2A Duration**
+
+![E2a duration](Results/English/variance_adaptor_plots/duration/E2a_duration.png)
+
+**E2B Duration**
+
+![E2b duration](Results/English/variance_adaptor_plots/duration/E2b_duration.png)
+
+**E3 Duration**
+
+![E3 duration](Results/English/variance_adaptor_plots/duration/E3_duration.png)
+
+**E4 Duration**
+
+![E4 duration](Results/English/variance_adaptor_plots/duration/E4_duration.png)
+
+**E1 Energy**
+
+![E1 energy](Results/English/variance_adaptor_plots/energy/E1_energy.png)
+
+**E2A Energy**
+
+![E2a energy](Results/English/variance_adaptor_plots/energy/E2a_energy.png)
+
+**E2B Energy**
+
+![E2b energy](Results/English/variance_adaptor_plots/energy/E2b_energy.png)
+
+**E3 Energy**
+
+![E3 energy](Results/English/variance_adaptor_plots/energy/E3_energy.png)
+
+**E4 Energy**
+
+![E4 energy](Results/English/variance_adaptor_plots/energy/E4_energy.png)
+
+**E1 Pitch**
+
+![E1 pitch](Results/English/variance_adaptor_plots/pitch/E1_pitch.png)
+
+**E2A Pitch**
+
+![E2a pitch](Results/English/variance_adaptor_plots/pitch/E2a_pitch.png)
+
+**E2B Pitch**
+
+![E2b pitch](Results/English/variance_adaptor_plots/pitch/E2b_pitch.png)
+
+**E3 Pitch**
+
+![E3 pitch](Results/English/variance_adaptor_plots/pitch/E3_pitch.png)
+
+**E4 Pitch**
+
+![E4 pitch](Results/English/variance_adaptor_plots/pitch/E4_pitch.png)
+
+### Telugu
+
+**Training Loss**
+
+![training loss](Results/Telugu/training_loss.png)
+
+**Validation Loss**
+
+![validation loss](Results/Telugu/validation_loss.png)
+
+
+## Generated Speech Samples
+
+- [English audio samples](Results/English/test_generated_audios/)
+- [Telugu audio samples](Results/Telugu/test_generated_audios/)
+
+## Variance Adaptor Visualizations
+
+The variance adaptor models duration, pitch and energy.
+
+- `Results/English/variance_adaptor_plots/`
+- `Results/Telugu/variance_adaptor_plots/`
+
+## Installation
 
 ```bash
+git clone https://github.com/Hanushree29/fastspeech2-tts-english-telugu.git
+cd fastspeech2-tts-english-telugu
 pip install -r requirements.txt
-
-cd English
-python3 preprocess.py config/preprocess.yaml
-python3 train.py -p config/preprocess.yaml -m config/model.yaml -t config/train.yaml
-python3 inference.py --restore_step 30000 --mode single \
-  --text "your text here" --speaker_id 0 \
-  -p config/preprocess.yaml -m config/model.yaml -t config/train.yaml
 ```
 
-Telugu follows the same command pattern inside `Telugu/` once training completes.
+## Training and Inference
 
-## 8. Checkpoints
+Use the respective language directory and its configuration files
+for preprocessing, training and inference.
+Download the required checkpoint using the links in the checkpoint README.
 
-Checkpoints (~419MB each, 6 per language, every 5,000 steps) are versioned via **Git LFS** per the assignment's guidance for oversized files.
+## Technical Report
 
-Backup mirror (used live during training for crash recovery after two Kaggle kernel interruptions): https://huggingface.co/Hanushree/fastspeech2-svarah-english
+See the `Report/` directory for the technical report and experiment analysis.
 
-## 9. Results at a Glance
+## Author
 
-### Training & Validation Loss
+**Hanushree M**
 
-| Training Loss | Validation Loss |
-|---|---|
-| ![Training Loss](Results/English/training_loss.png) | ![Validation Loss](Results/English/validation_loss.png) |
+[GitHub Profile](https://github.com/Hanushree29)
 
-### Variance-Adaptor Predictions (Example: E1 — longest test sentence)
+---
 
-| Duration | Pitch (F0) | Energy |
-|---|---|---|
-| ![Duration](Results/English/variance_adaptor_plots/duration/E1_duration.png) | ![Pitch](Results/English/variance_adaptor_plots/pitch/E1_pitch.png) | ![Energy](Results/English/variance_adaptor_plots/energy/E1_energy.png) |
-
-See `Results/English/variance_adaptor_plots/` for all 5 sentences × 3 variance types (15 plots total).
-
-### Checkpoint Progression
-
-| Step | Total Loss (Train) | File |
-|---|---|---|
-| 5,000  | 2.0793 | `English/checkpoints/5000.pth.tar` |
-| 10,000 | 1.4624 | `English/checkpoints/10000.pth.tar` |
-| 15,000 | 1.0841 | `English/checkpoints/15000.pth.tar` |
-| 20,000 | 1.0939 | `English/checkpoints/20000.pth.tar` |
-| 25,000 | 1.0624 | `English/checkpoints/25000.pth.tar` |
-| 30,000 (final) | 0.9145 | `English/checkpoints/30000.pth.tar` |
-
-*(All values from the live training log, captured in `loss_history.csv` during training.)*
-
-![Checkpoint Progression](Results/English/checkpoint_progression.png)
-
-## 10. Known Limitations & Possible Improvements
-
-Full analysis with supporting plots in `Report/Technical_Report.pdf`. Each limitation below is grounded in observed, plotted evidence rather than general expectation:
-
-- **Energy decay correlating with vocoder artifacts in longer utterances.** FastSpeech2's variance adaptor (Ren et al., 2021) is non-autoregressive: duration, pitch, and energy are predicted independently per phoneme in a single forward pass, with no mechanism to condition later predictions on accumulated earlier error. On low-resource, noisy training data this is known to compound over longer sequences — observed directly here (`Results/English/variance_adaptor_plots/energy/E1_energy.png`, `E4_energy.png`), where predicted energy declines toward the end of the two longest test sentences (84-85 phonemes), with the corresponding generated audio showing increased vocoder noise in that same region. Neural vocoders including HiFi-GAN are documented to degrade on low-energy / near-silent mel regions, since there is less harmonic structure to reconstruct from. *Possible improvement:* a minimum-energy floor during inference, or duration-aware curriculum training that increases sequence length gradually.
-
-- **Thin per-speaker training data.** With 115 pseudo-speakers sharing a 5-hour training budget, each speaker contributes roughly 2.5 minutes of audio — well below the tens of minutes to hours per speaker typically used in multi-speaker TTS literature for stable, speaker-consistent prosody. *Possible improvement:* fewer speakers with more data each, within the same total 5-hour budget specified by the assignment.
-
-- **Phonemizer limited to its built-in lexicon.** `g2p_en`'s statistical fallback (used for out-of-vocabulary tokens such as "andaroo" in E4) has no mechanism to verify correctness for words outside standard English vocabulary, since it was trained on the CMU Pronouncing Dictionary. There is no ground-truth phoneme sequence to validate such output against. *Possible improvement:* an expanded or domain-specific pronunciation lexicon covering the test set's vocabulary in advance.
-
-- **Persistent train/validation loss gap.** A consistent ~3.7× separation (0.91 train vs. 3.41 validation at step 30,000, see `Results/English/validation_loss.png`) that does not close over the full 30,000-step run indicates the model is fitting training-speaker-specific patterns rather than generalizing — consistent with the thin-per-speaker-data limitation above, since a speaker embedding has little signal to learn a generalizable identity from 2.5 minutes of audio. *Possible improvement:* stronger regularization (increased dropout, weight decay) or a larger, better-balanced validation set relative to the number of distinct speakers.
+English and Telugu FastSpeech 2 implementations.

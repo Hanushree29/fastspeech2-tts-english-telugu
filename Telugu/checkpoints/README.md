@@ -1,10 +1,8 @@
 # Telugu FastSpeech 2 Checkpoints
 
-Training checkpoints hosted on Hugging Face.
+Hugging Face repository: https://huggingface.co/Hanushree/fastspeech2-telugu-v2
 
-**Model repository:** https://huggingface.co/Hanushree/fastspeech2-telugu-v2
-
-| Training step | Checkpoint | Download |
+| Step | Checkpoint | Download |
 |---:|---|---|
 | 1,000 | `1000.pth.tar` | [Download](https://huggingface.co/Hanushree/fastspeech2-telugu-v2/resolve/main/1000.pth.tar) |
 | 2,000 | `2000.pth.tar` | [Download](https://huggingface.co/Hanushree/fastspeech2-telugu-v2/resolve/main/2000.pth.tar) |
@@ -26,3 +24,7 @@ Training checkpoints hosted on Hugging Face.
 | 18,000 | `18000.pth.tar` | [Download](https://huggingface.co/Hanushree/fastspeech2-telugu-v2/resolve/main/18000.pth.tar) |
 | 19,000 | `19000.pth.tar` | [Download](https://huggingface.co/Hanushree/fastspeech2-telugu-v2/resolve/main/19000.pth.tar) |
 | 20,000 | `20000.pth.tar` | [Download](https://huggingface.co/Hanushree/fastspeech2-telugu-v2/resolve/main/20000.pth.tar) |
+
+Verified checkpoints: 20
+
+Download the required checkpoint into this directory before inference.
