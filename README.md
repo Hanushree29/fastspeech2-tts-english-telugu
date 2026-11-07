@@ -227,18 +227,114 @@ The experimental outputs are organized in parallel columns to facilitate direct 
 
 ### Additional Experiment Graphs
 
+
 <table width='100%'>
-<thead><tr>
+<thead>
+<tr>
 <th width='50%'>ENGLISH</th>
 <th width='50%'>TELUGU</th>
-</tr></thead><tbody>
-<tr><td width='50%' valign='top'><div align='center'><b>Checkpoint Progression</b><br><br><a href='Results/English/checkpoint_progression.png'><img src='Results/English/checkpoint_progression.png' alt='Checkpoint Progression' width='100%'></a></div></td><td width='50%' valign='top'><i>Not available</i></td></tr>
-<tr><td width='50%' valign='top'><div align='center'><b>E1 Spectrogram</b><br><br><a href='Results/English/test_generated_audios/E1_spectrogram.png'><img src='Results/English/test_generated_audios/E1_spectrogram.png' alt='E1 Spectrogram' width='100%'></a></div></td><td width='50%' valign='top'><i>Not available</i></td></tr>
-<tr><td width='50%' valign='top'><div align='center'><b>E2A Spectrogram</b><br><br><a href='Results/English/test_generated_audios/E2a_spectrogram.png'><img src='Results/English/test_generated_audios/E2a_spectrogram.png' alt='E2A Spectrogram' width='100%'></a></div></td><td width='50%' valign='top'><i>Not available</i></td></tr>
-<tr><td width='50%' valign='top'><div align='center'><b>E2B Spectrogram</b><br><br><a href='Results/English/test_generated_audios/E2b_spectrogram.png'><img src='Results/English/test_generated_audios/E2b_spectrogram.png' alt='E2B Spectrogram' width='100%'></a></div></td><td width='50%' valign='top'><i>Not available</i></td></tr>
-<tr><td width='50%' valign='top'><div align='center'><b>E3 Spectrogram</b><br><br><a href='Results/English/test_generated_audios/E3_spectrogram.png'><img src='Results/English/test_generated_audios/E3_spectrogram.png' alt='E3 Spectrogram' width='100%'></a></div></td><td width='50%' valign='top'><i>Not available</i></td></tr>
-<tr><td width='50%' valign='top'><div align='center'><b>E4 Spectrogram</b><br><br><a href='Results/English/test_generated_audios/E4_spectrogram.png'><img src='Results/English/test_generated_audios/E4_spectrogram.png' alt='E4 Spectrogram' width='100%'></a></div></td><td width='50%' valign='top'><i>Not available</i></td></tr>
-</tbody></table>
+</tr>
+</thead>
+<tbody>
+
+<tr>
+<td valign='top'>
+<div align='center'><b>Checkpoint Progression</b><br><br>
+<a href='Results/English/checkpoint_progression.png'>
+<img src='Results/English/checkpoint_progression.png' width='100%'>
+</a></div>
+</td>
+<td valign='top'><i>Not available</i></td>
+</tr>
+
+<tr>
+<td valign='top'>
+<div align='center'><b>E1 Spectrogram</b><br><br>
+<a href='Results/English/test_generated_audios/E1_spectrogram.png'>
+<img src='Results/English/test_generated_audios/E1_spectrogram.png' width='100%'>
+</a></div>
+</td>
+<td valign='top'>
+<div align='center'><b>T1 Spectrogram</b><br><br>
+<a href='Results/Telugu/spectrograms/T1_spectrogram.png'>
+<img src='Results/Telugu/spectrograms/T1_spectrogram.png' width='100%'>
+</a></div>
+</td>
+</tr>
+
+<tr>
+<td valign='top'>
+<div align='center'><b>E2A Spectrogram</b><br><br>
+<a href='Results/English/test_generated_audios/E2a_spectrogram.png'>
+<img src='Results/English/test_generated_audios/E2a_spectrogram.png' width='100%'>
+</a></div>
+</td>
+<td valign='top'>
+<div align='center'><b>T2A Spectrogram</b><br><br>
+<a href='Results/Telugu/spectrograms/T2a_spectrogram.png'>
+<img src='Results/Telugu/spectrograms/T2a_spectrogram.png' width='100%'>
+</a></div>
+</td>
+</tr>
+
+<tr>
+<td valign='top'>
+<div align='center'><b>E2B Spectrogram</b><br><br>
+<a href='Results/English/test_generated_audios/E2b_spectrogram.png'>
+<img src='Results/English/test_generated_audios/E2b_spectrogram.png' width='100%'>
+</a></div>
+</td>
+<td valign='top'>
+<div align='center'><b>T2B Spectrogram</b><br><br>
+<a href='Results/Telugu/spectrograms/T2b_spectrogram.png'>
+<img src='Results/Telugu/spectrograms/T2b_spectrogram.png' width='100%'>
+</a></div>
+</td>
+</tr>
+
+<tr>
+<td valign='top'>
+<div align='center'><b>E3 Spectrogram</b><br><br>
+<a href='Results/English/test_generated_audios/E3_spectrogram.png'>
+<img src='Results/English/test_generated_audios/E3_spectrogram.png' width='100%'>
+</a></div>
+</td>
+<td valign='top'>
+<div align='center'><b>T3 Spectrogram</b><br><br>
+<a href='Results/Telugu/spectrograms/T3_spectrogram.png'>
+<img src='Results/Telugu/spectrograms/T3_spectrogram.png' width='100%'>
+</a></div>
+</td>
+</tr>
+
+<tr>
+<td valign='top'>
+<div align='center'><b>E4 Spectrogram</b><br><br>
+<a href='Results/English/test_generated_audios/E4_spectrogram.png'>
+<img src='Results/English/test_generated_audios/E4_spectrogram.png' width='100%'>
+</a></div>
+</td>
+<td valign='top'>
+<div align='center'><b>T4 Spectrogram</b><br><br>
+<a href='Results/Telugu/spectrograms/T4_spectrogram.png'>
+<img src='Results/Telugu/spectrograms/T4_spectrogram.png' width='100%'>
+</a></div>
+</td>
+</tr>
+
+<tr>
+<td valign='top'><i>Additional enhanced sample not included</i></td>
+<td valign='top'>
+<div align='center'><b>T4 Enhanced Spectrogram</b><br><br>
+<a href='Results/Telugu/spectrograms/T4_enhanced_spectrogram.png'>
+<img src='Results/Telugu/spectrograms/T4_enhanced_spectrogram.png' width='100%'>
+</a></div>
+</td>
+</tr>
+
+</tbody>
+</table>
+
 
 ---
 
