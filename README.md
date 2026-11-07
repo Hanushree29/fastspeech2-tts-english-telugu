@@ -1,134 +1,93 @@
-# FastSpeech 2 — English and Telugu Text-to-Speech
+# Multilingual Neural Text-to-Speech
 
-<p align="center">
-  <strong>A multilingual neural text-to-speech implementation using FastSpeech 2</strong>
-</p>
+### FastSpeech 2 | English & Telugu
 
-<p align="center">
-  English | తెలుగు
-</p>
+![Python](https://img.shields.io/badge/Python-3.x-blue?logo=python)
+![Deep Learning](https://img.shields.io/badge/Deep%20Learning-PyTorch-ee4c2c?logo=pytorch)
+![Languages](https://img.shields.io/badge/Languages-English%20%7C%20Telugu-purple)
+![Status](https://img.shields.io/badge/Project-Research%20Implementation-2ea44f)
 
-<p align="center">
-  <a href="https://github.com/Hanushree29/fastspeech2-tts-english-telugu">GitHub</a> ·
-  <a href="https://huggingface.co/Hanushree/fastspeech2-svarah-english">English Models</a> ·
-  <a href="https://huggingface.co/Hanushree/fastspeech2-telugu-v2">Telugu Models</a>
-</p>
+**A multilingual Text-to-Speech research implementation based on FastSpeech 2, covering English and Telugu speech generation.**
+
+This repository brings together language-specific data preparation, acoustic-model training, inference pipelines, model checkpoints, generated speech samples, and experiment visualizations.
+
+**Implemented languages:**
+
+| Language | Dataset | Implementation | Model checkpoints |
+|---|---|---|---|
+| English | AI4Bharat Svarah | [`English/`](English/) | [Hugging Face](https://huggingface.co/Hanushree/fastspeech2-svarah-english) |
+| Telugu | IndicTTS | [`Telugu/`](Telugu/) | [Hugging Face](https://huggingface.co/Hanushree/fastspeech2-telugu-v2) |
 
 ---
 
-## 1. Overview
+## Table of Contents
 
-This repository presents an implementation of **FastSpeech 2** for
-neural text-to-speech synthesis in English and Telugu.
+- [Project Overview](#project-overview)
+- [Architecture](#architecture)
+- [Repository Organization](#repository-organization)
+- [Datasets and Language Pipelines](#datasets-and-language-pipelines)
+- [Model Checkpoints](#model-checkpoints)
+- [Training Experiments](#training-experiments)
+- [Generated Speech Samples](#generated-speech-samples)
+- [Variance Adaptor Analysis](#variance-adaptor-analysis)
+- [Installation](#installation)
+- [Reproducibility](#reproducibility)
+- [Technical Report](#technical-report)
+- [Acknowledgements](#acknowledgements)
 
-The project maintains independent language pipelines for dataset
-preparation, text processing, acoustic feature extraction, training,
-inference, and result analysis.
+---
 
-The objective is to generate intelligible speech from text while
-investigating the role of duration, pitch, and energy prediction
-in neural speech synthesis.
+## Project Overview
 
-### Project highlights
+Text-to-Speech (TTS) converts written language into natural-sounding speech. This project implements FastSpeech 2 for two languages, with separate data-processing and configuration pipelines.
 
-- Separate English and Telugu implementations.
-- FastSpeech 2 acoustic model.
-- Language-specific text and phoneme processing.
-- Duration, pitch, and energy prediction.
-- Mel-spectrogram generation.
-- HiFi-GAN waveform synthesis.
-- Training and validation loss analysis.
-- Generated speech samples.
-- Variance-adaptor visualizations.
-- External checkpoint hosting.
+FastSpeech 2 is a non-autoregressive acoustic model. It uses explicit duration, pitch, and energy representations to improve speech generation and provide control over important prosodic characteristics.
 
-## 2. Architecture
+### Project objectives
 
-FastSpeech 2 is a non-autoregressive text-to-speech architecture.
-It uses explicit variance information to model speech duration,
-pitch, and energy.
+- Develop separate English and Telugu TTS pipelines.
+- Prepare language-specific text and speech data.
+- Train FastSpeech 2 acoustic models using configurable parameters.
+- Generate mel-spectrograms from input text.
+- Convert predicted mel-spectrograms into audio using HiFi-GAN.
+- Examine training behaviour and variance-adaptor predictions.
 
-```text
-             Input Text
-                 |
-          Text Processing
-                 |
-          Phoneme Sequence
-                 |
-              Encoder
-                 |
-          Variance Adaptor
-          /      |       \
-     Duration  Pitch    Energy
-          \      |       /
-           Length Regulator
-                 |
-              Decoder
-                 |
-          Mel-Spectrogram
-                 |
-              HiFi-GAN
-                 |
-          Generated Speech
+## Architecture
+
+The overall text-to-speech pipeline is:
+
+```mermaid
+flowchart TD
+    A[Input Text] --> B[Text Normalization and Processing]
+    B --> C[Phoneme / Symbol Sequence]
+    C --> D[FastSpeech 2 Text Encoder]
+    D --> E[Variance Adaptor]
+    E --> F[Duration Prediction]
+    E --> G[Pitch Prediction]
+    E --> H[Energy Prediction]
+    F --> I[Length Regulator]
+    G --> I
+    H --> I
+    I --> J[Mel-Spectrogram Decoder]
+    J --> K[Predicted Mel-Spectrogram]
+    K --> L[HiFi-GAN Vocoder]
+    L --> M[Generated Speech]
 ```
 
-### Architecture components
+### Main components
 
 | Component | Responsibility |
 |---|---|
-| Text processing | Converts text into model-compatible representations |
-| Encoder | Extracts contextual text representations |
-| Duration predictor | Predicts phoneme duration |
-| Pitch predictor | Predicts pitch features |
-| Energy predictor | Predicts energy features |
-| Length regulator | Expands representations using predicted duration |
-| Decoder | Generates mel-spectrograms |
-| HiFi-GAN | Converts mel-spectrograms into waveforms |
+| Text processing | Converts input text into the model's supported sequence representation. |
+| Text encoder | Encodes linguistic input into hidden representations. |
+| Duration predictor | Estimates the duration of input tokens or phonemes. |
+| Pitch predictor | Models pitch-related information. |
+| Energy predictor | Models speech energy. |
+| Length regulator | Expands encoder representations according to predicted durations. |
+| Mel decoder | Generates the acoustic mel-spectrogram. |
+| HiFi-GAN | Converts mel-spectrograms into waveform audio. |
 
-## 3. Datasets
-
-| Language | Dataset | Application |
-|---|---|---|
-| English | AI4Bharat Svarah | English speech synthesis |
-| Telugu | IndicTTS Telugu | Telugu speech synthesis |
-
-### English preprocessing
-
-The English pipeline includes audio and transcript preparation,
-duration filtering, acoustic feature extraction, and dataset
-organization for training and validation.
-
-The documented training subset contains approximately 5.01 hours
-of audio, with approximately 0.99 hours used for validation.
-
-### Telugu preprocessing
-
-The Telugu pipeline includes:
-
-- Audio and transcript processing.
-- Telugu text and phoneme preparation.
-- Acoustic feature extraction.
-- Duration, pitch, and energy target preparation.
-- Training and validation data preparation.
-
-## 4. Training Configuration
-
-The two languages use independent configuration files.
-
-| Setting | English | Telugu |
-|---|---|---|
-| Architecture | FastSpeech 2 | FastSpeech 2 |
-| Dataset | Svarah | IndicTTS Telugu |
-| Acoustic representation | Mel-spectrogram | Mel-spectrogram |
-| Vocoder | Universal HiFi-GAN | Universal HiFi-GAN |
-| Sample rate | 22,050 Hz | 22,050 Hz |
-| Training environment | Kaggle GPU | Kaggle GPU |
-| Latest documented checkpoint | 30,000 steps | 20,000 steps |
-
-Refer to the respective `config/` directories for model,
-preprocessing, and training configurations.
-
-## 5. Repository Organization
+## Repository Organization
 
 ```text
 fastspeech2-tts-english-telugu/
@@ -143,9 +102,10 @@ fastspeech2-tts-english-telugu/
 │   ├── text/
 │   ├── utils/
 │   ├── dataset.py
-│   ├── inference.py
 │   ├── preprocess.py
-│   └── train.py
+│   ├── train.py
+│   ├── inference.py
+│   └── synthesize.py
 │
 ├── Telugu/
 │   ├── audio/
@@ -154,255 +114,256 @@ fastspeech2-tts-english-telugu/
 │   ├── hifigan/
 │   ├── lexicon/
 │   ├── model/
-│   ├── preprocessor/
 │   ├── text/
-│   ├── transformer/
 │   ├── utils/
 │   ├── dataset.py
-│   ├── inference.py
 │   ├── preprocess.py
-│   └── train.py
+│   ├── train.py
+│   ├── inference.py
+│   └── synthesize.py
 │
 ├── Results/
 │   ├── English/
+│   │   ├── training_loss.png
+│   │   ├── validation_loss.png
+│   │   ├── test_generated_audios/
+│   │   └── variance_adaptor_plots/
 │   └── Telugu/
+│       ├── training_loss.png
+│       ├── validation_loss.png
+│       ├── test_generated_audios/
+│       └── variance_adaptor_plots/
 │
 ├── Report/
-├── README.md
-└── requirements.txt
+├── requirements.txt
+└── README.md
 ```
 
+## Datasets and Language Pipelines
 
-## English Experiment Results
+### English — Svarah
 
-### Training Loss
+The English pipeline uses the AI4Bharat Svarah speech dataset. The language-specific preprocessing and training configuration are maintained under `English/`.
 
-![Training Loss](Results/English/training_loss.png)
-### Validation Loss
+### Telugu — IndicTTS
 
-![Validation Loss](Results/English/validation_loss.png)
-### Checkpoint Progression
+The Telugu pipeline uses the IndicTTS dataset. Its preprocessing, language configuration, training code, and inference implementation are maintained separately under `Telugu/`.
 
-![Checkpoint Progression](Results/English/checkpoint_progression.png)
-
-### Generated English Speech
-
-- [E1.wav](Results/English/test_generated_audios/E1.wav)
-- [E2a.wav](Results/English/test_generated_audios/E2a.wav)
-- [E2b.wav](Results/English/test_generated_audios/E2b.wav)
-- [E3.wav](Results/English/test_generated_audios/E3.wav)
-- [E4.wav](Results/English/test_generated_audios/E4.wav)
-
-### English Variance Adaptor Visualizations
-
-![E1_duration](Results/English/variance_adaptor_plots/duration/E1_duration.png)
-
-![E2a_duration](Results/English/variance_adaptor_plots/duration/E2a_duration.png)
-
-![E2b_duration](Results/English/variance_adaptor_plots/duration/E2b_duration.png)
-
-![E3_duration](Results/English/variance_adaptor_plots/duration/E3_duration.png)
-
-![E4_duration](Results/English/variance_adaptor_plots/duration/E4_duration.png)
-
-![E1_energy](Results/English/variance_adaptor_plots/energy/E1_energy.png)
-
-![E2a_energy](Results/English/variance_adaptor_plots/energy/E2a_energy.png)
-
-![E2b_energy](Results/English/variance_adaptor_plots/energy/E2b_energy.png)
-
-![E3_energy](Results/English/variance_adaptor_plots/energy/E3_energy.png)
-
-![E4_energy](Results/English/variance_adaptor_plots/energy/E4_energy.png)
-
-![E1_pitch](Results/English/variance_adaptor_plots/pitch/E1_pitch.png)
-
-![E2a_pitch](Results/English/variance_adaptor_plots/pitch/E2a_pitch.png)
-
-![E2b_pitch](Results/English/variance_adaptor_plots/pitch/E2b_pitch.png)
-
-![E3_pitch](Results/English/variance_adaptor_plots/pitch/E3_pitch.png)
-
-![E4_pitch](Results/English/variance_adaptor_plots/pitch/E4_pitch.png)
-
-
-## Telugu Experiment Results
-
-### Training Loss
-
-![Training Loss](Results/Telugu/training_loss.png)
-### Validation Loss
-
-![Validation Loss](Results/Telugu/validation_loss.png)
-### Model Weight Distribution
-
-_Result image not yet available._
-### Module Parameter Distribution
-
-_Result image not yet available._
-### Duration Comparison
-
-![Duration Comparison](Results/Telugu/duration_comparison.png)
-### Pitch Comparison
-
-![Pitch Comparison](Results/Telugu/pitch_comparison.png)
-### Energy Comparison
-
-![Energy Comparison](Results/Telugu/energy_comparison.png)
-
-### Generated Telugu Speech
-
-- [T1.wav](Results/Telugu/test_generated_audios/T1.wav)
-- [T2a.wav](Results/Telugu/test_generated_audios/T2a.wav)
-- [T2b.wav](Results/Telugu/test_generated_audios/T2b.wav)
-- [T3.wav](Results/Telugu/test_generated_audios/T3.wav)
-- [T4.wav](Results/Telugu/test_generated_audios/T4.wav)
-- [T4_enhanced.wav](Results/Telugu/test_generated_audios/T4_enhanced.wav)
-
-### Telugu Variance Adaptor Plots
-
-![T1](Results/Telugu/variance_adaptor_plots/duration/T1.png)
-
-![T2a](Results/Telugu/variance_adaptor_plots/duration/T2a.png)
-
-![T2b](Results/Telugu/variance_adaptor_plots/duration/T2b.png)
-
-![T3](Results/Telugu/variance_adaptor_plots/duration/T3.png)
-
-![T4](Results/Telugu/variance_adaptor_plots/duration/T4.png)
-
-![T1](Results/Telugu/variance_adaptor_plots/energy/T1.png)
-
-![T2a](Results/Telugu/variance_adaptor_plots/energy/T2a.png)
-
-![T2b](Results/Telugu/variance_adaptor_plots/energy/T2b.png)
-
-![T3](Results/Telugu/variance_adaptor_plots/energy/T3.png)
-
-![T4](Results/Telugu/variance_adaptor_plots/energy/T4.png)
-
-![T1](Results/Telugu/variance_adaptor_plots/pitch/T1.png)
-
-![T2a](Results/Telugu/variance_adaptor_plots/pitch/T2a.png)
-
-![T2b](Results/Telugu/variance_adaptor_plots/pitch/T2b.png)
-
-![T3](Results/Telugu/variance_adaptor_plots/pitch/T3.png)
-
-![T4](Results/Telugu/variance_adaptor_plots/pitch/T4.png)
-
-
-## Technical Report
-
-The technical report documents the architecture, datasets,
-preprocessing pipeline, training methodology, experimental
-results, and analysis.
-
-_Report PDF is not yet present in the repository._
+Each language has its own configuration files. Refer to the respective `config/` directory for the actual preprocessing, model, and training settings.
 
 ## Model Checkpoints
 
-Model checkpoints are hosted on Hugging Face to avoid GitHub
-large-file limitations.
+Trained model checkpoints are hosted on Hugging Face to avoid GitHub's large-file limitations.
 
-- [English FastSpeech 2 Checkpoints](https://huggingface.co/Hanushree/fastspeech2-svarah-english)
-- [Telugu FastSpeech 2 Checkpoints](https://huggingface.co/Hanushree/fastspeech2-telugu-v2)
+### English checkpoints
 
-For Telugu checkpoint download links, see
-[Telugu/checkpoints/README.md](Telugu/checkpoints/README.md).
+Model repository: [Hanushree/fastspeech2-svarah-english](https://huggingface.co/Hanushree/fastspeech2-svarah-english)
 
+| Training step | Checkpoint |
+|---:|---|
+| 5,000 | [5000.pth.tar](https://huggingface.co/Hanushree/fastspeech2-svarah-english/resolve/main/5000.pth.tar) |
+| 10,000 | [10000.pth.tar](https://huggingface.co/Hanushree/fastspeech2-svarah-english/resolve/main/10000.pth.tar) |
+| 15,000 | [15000.pth.tar](https://huggingface.co/Hanushree/fastspeech2-svarah-english/resolve/main/15000.pth.tar) |
+| 20,000 | [20000.pth.tar](https://huggingface.co/Hanushree/fastspeech2-svarah-english/resolve/main/20000.pth.tar) |
+| 25,000 | [25000.pth.tar](https://huggingface.co/Hanushree/fastspeech2-svarah-english/resolve/main/25000.pth.tar) |
+| 30,000 | [30000.pth.tar](https://huggingface.co/Hanushree/fastspeech2-svarah-english/resolve/main/30000.pth.tar) |
 
-## 7. Installation
+### Telugu checkpoints
 
-Clone the repository:
+Model repository: [Hanushree/fastspeech2-telugu-v2](https://huggingface.co/Hanushree/fastspeech2-telugu-v2)
+
+| Training step | Checkpoint |
+|---:|---|
+| 1,000 | [1000.pth.tar](https://huggingface.co/Hanushree/fastspeech2-telugu-v2/resolve/main/1000.pth.tar) |
+| 2,000 | [2000.pth.tar](https://huggingface.co/Hanushree/fastspeech2-telugu-v2/resolve/main/2000.pth.tar) |
+| 3,000 | [3000.pth.tar](https://huggingface.co/Hanushree/fastspeech2-telugu-v2/resolve/main/3000.pth.tar) |
+| 4,000 | [4000.pth.tar](https://huggingface.co/Hanushree/fastspeech2-telugu-v2/resolve/main/4000.pth.tar) |
+| 5,000 | [5000.pth.tar](https://huggingface.co/Hanushree/fastspeech2-telugu-v2/resolve/main/5000.pth.tar) |
+| 6,000 | [6000.pth.tar](https://huggingface.co/Hanushree/fastspeech2-telugu-v2/resolve/main/6000.pth.tar) |
+| 7,000 | [7000.pth.tar](https://huggingface.co/Hanushree/fastspeech2-telugu-v2/resolve/main/7000.pth.tar) |
+| 8,000 | [8000.pth.tar](https://huggingface.co/Hanushree/fastspeech2-telugu-v2/resolve/main/8000.pth.tar) |
+| 9,000 | [9000.pth.tar](https://huggingface.co/Hanushree/fastspeech2-telugu-v2/resolve/main/9000.pth.tar) |
+| 10,000 | [10000.pth.tar](https://huggingface.co/Hanushree/fastspeech2-telugu-v2/resolve/main/10000.pth.tar) |
+| 11,000 | [11000.pth.tar](https://huggingface.co/Hanushree/fastspeech2-telugu-v2/resolve/main/11000.pth.tar) |
+| 12,000 | [12000.pth.tar](https://huggingface.co/Hanushree/fastspeech2-telugu-v2/resolve/main/12000.pth.tar) |
+| 13,000 | [13000.pth.tar](https://huggingface.co/Hanushree/fastspeech2-telugu-v2/resolve/main/13000.pth.tar) |
+| 14,000 | [14000.pth.tar](https://huggingface.co/Hanushree/fastspeech2-telugu-v2/resolve/main/14000.pth.tar) |
+| 15,000 | [15000.pth.tar](https://huggingface.co/Hanushree/fastspeech2-telugu-v2/resolve/main/15000.pth.tar) |
+| 16,000 | [16000.pth.tar](https://huggingface.co/Hanushree/fastspeech2-telugu-v2/resolve/main/16000.pth.tar) |
+| 17,000 | [17000.pth.tar](https://huggingface.co/Hanushree/fastspeech2-telugu-v2/resolve/main/17000.pth.tar) |
+| 18,000 | [18000.pth.tar](https://huggingface.co/Hanushree/fastspeech2-telugu-v2/resolve/main/18000.pth.tar) |
+| 19,000 | [19000.pth.tar](https://huggingface.co/Hanushree/fastspeech2-telugu-v2/resolve/main/19000.pth.tar) |
+| 20,000 | [20000.pth.tar](https://huggingface.co/Hanushree/fastspeech2-telugu-v2/resolve/main/20000.pth.tar) |
+
+See [`English/checkpoints/`](English/checkpoints/) and [`Telugu/checkpoints/`](Telugu/checkpoints/) for language-specific checkpoint documentation.
+
+---
+
+## Experimental Results and Visual Comparison
+
+The experimental outputs are organized in parallel columns to facilitate direct inspection of the English and Telugu FastSpeech 2 implementations.
+
+## 1. Training Performance
+
+### Training Loss
+
+<table width='100%'>
+<thead><tr>
+<th width='50%'>ENGLISH</th>
+<th width='50%'>TELUGU</th>
+</tr></thead><tbody>
+<tr><td width='50%' valign='top'><div align='center'><b>Training Loss</b><br><br><a href='Results/English/training_loss.png'><img src='Results/English/training_loss.png' alt='Training Loss' width='100%'></a></div></td><td width='50%' valign='top'><div align='center'><b>Training Loss</b><br><br><a href='Results/Telugu/training_loss.png'><img src='Results/Telugu/training_loss.png' alt='Training Loss' width='100%'></a></div></td></tr>
+</tbody></table>
+
+### Validation Loss
+
+<table width='100%'>
+<thead><tr>
+<th width='50%'>ENGLISH</th>
+<th width='50%'>TELUGU</th>
+</tr></thead><tbody>
+<tr><td width='50%' valign='top'><div align='center'><b>Validation Loss</b><br><br><a href='Results/English/validation_loss.png'><img src='Results/English/validation_loss.png' alt='Validation Loss' width='100%'></a></div></td><td width='50%' valign='top'><div align='center'><b>Validation Loss</b><br><br><a href='Results/Telugu/validation_loss.png'><img src='Results/Telugu/validation_loss.png' alt='Validation Loss' width='100%'></a></div></td></tr>
+</tbody></table>
+
+### Additional Experiment Graphs
+
+<table width='100%'>
+<thead><tr>
+<th width='50%'>ENGLISH</th>
+<th width='50%'>TELUGU</th>
+</tr></thead><tbody>
+<tr><td width='50%' valign='top'><div align='center'><b>Checkpoint Progression</b><br><br><a href='Results/English/checkpoint_progression.png'><img src='Results/English/checkpoint_progression.png' alt='Checkpoint Progression' width='100%'></a></div></td><td width='50%' valign='top'><i>Not available</i></td></tr>
+<tr><td width='50%' valign='top'><div align='center'><b>E1 Spectrogram</b><br><br><a href='Results/English/test_generated_audios/E1_spectrogram.png'><img src='Results/English/test_generated_audios/E1_spectrogram.png' alt='E1 Spectrogram' width='100%'></a></div></td><td width='50%' valign='top'><i>Not available</i></td></tr>
+<tr><td width='50%' valign='top'><div align='center'><b>E2A Spectrogram</b><br><br><a href='Results/English/test_generated_audios/E2a_spectrogram.png'><img src='Results/English/test_generated_audios/E2a_spectrogram.png' alt='E2A Spectrogram' width='100%'></a></div></td><td width='50%' valign='top'><i>Not available</i></td></tr>
+<tr><td width='50%' valign='top'><div align='center'><b>E2B Spectrogram</b><br><br><a href='Results/English/test_generated_audios/E2b_spectrogram.png'><img src='Results/English/test_generated_audios/E2b_spectrogram.png' alt='E2B Spectrogram' width='100%'></a></div></td><td width='50%' valign='top'><i>Not available</i></td></tr>
+<tr><td width='50%' valign='top'><div align='center'><b>E3 Spectrogram</b><br><br><a href='Results/English/test_generated_audios/E3_spectrogram.png'><img src='Results/English/test_generated_audios/E3_spectrogram.png' alt='E3 Spectrogram' width='100%'></a></div></td><td width='50%' valign='top'><i>Not available</i></td></tr>
+<tr><td width='50%' valign='top'><div align='center'><b>E4 Spectrogram</b><br><br><a href='Results/English/test_generated_audios/E4_spectrogram.png'><img src='Results/English/test_generated_audios/E4_spectrogram.png' alt='E4 Spectrogram' width='100%'></a></div></td><td width='50%' valign='top'><i>Not available</i></td></tr>
+</tbody></table>
+
+---
+
+## 2. Variance Adaptor Analysis
+
+The following plots present the variance-adaptor outputs for duration, pitch, and energy.
+
+### Duration Prediction
+
+<table width='100%'>
+<thead><tr>
+<th width='50%'>ENGLISH</th>
+<th width='50%'>TELUGU</th>
+</tr></thead><tbody>
+<tr><td width='50%' valign='top'><div align='center'><b>E1 Duration</b><br><br><a href='Results/English/variance_adaptor_plots/duration/E1_duration.png'><img src='Results/English/variance_adaptor_plots/duration/E1_duration.png' alt='E1 Duration' width='100%'></a></div></td><td width='50%' valign='top'><i>Not available</i></td></tr>
+<tr><td width='50%' valign='top'><div align='center'><b>E2A Duration</b><br><br><a href='Results/English/variance_adaptor_plots/duration/E2a_duration.png'><img src='Results/English/variance_adaptor_plots/duration/E2a_duration.png' alt='E2A Duration' width='100%'></a></div></td><td width='50%' valign='top'><i>Not available</i></td></tr>
+<tr><td width='50%' valign='top'><div align='center'><b>E2B Duration</b><br><br><a href='Results/English/variance_adaptor_plots/duration/E2b_duration.png'><img src='Results/English/variance_adaptor_plots/duration/E2b_duration.png' alt='E2B Duration' width='100%'></a></div></td><td width='50%' valign='top'><i>Not available</i></td></tr>
+<tr><td width='50%' valign='top'><div align='center'><b>E3 Duration</b><br><br><a href='Results/English/variance_adaptor_plots/duration/E3_duration.png'><img src='Results/English/variance_adaptor_plots/duration/E3_duration.png' alt='E3 Duration' width='100%'></a></div></td><td width='50%' valign='top'><i>Not available</i></td></tr>
+<tr><td width='50%' valign='top'><div align='center'><b>E4 Duration</b><br><br><a href='Results/English/variance_adaptor_plots/duration/E4_duration.png'><img src='Results/English/variance_adaptor_plots/duration/E4_duration.png' alt='E4 Duration' width='100%'></a></div></td><td width='50%' valign='top'><i>Not available</i></td></tr>
+</tbody></table>
+
+### Pitch Prediction
+
+<table width='100%'>
+<thead><tr>
+<th width='50%'>ENGLISH</th>
+<th width='50%'>TELUGU</th>
+</tr></thead><tbody>
+<tr><td width='50%' valign='top'><div align='center'><b>E1 Pitch</b><br><br><a href='Results/English/variance_adaptor_plots/pitch/E1_pitch.png'><img src='Results/English/variance_adaptor_plots/pitch/E1_pitch.png' alt='E1 Pitch' width='100%'></a></div></td><td width='50%' valign='top'><i>Not available</i></td></tr>
+<tr><td width='50%' valign='top'><div align='center'><b>E2A Pitch</b><br><br><a href='Results/English/variance_adaptor_plots/pitch/E2a_pitch.png'><img src='Results/English/variance_adaptor_plots/pitch/E2a_pitch.png' alt='E2A Pitch' width='100%'></a></div></td><td width='50%' valign='top'><i>Not available</i></td></tr>
+<tr><td width='50%' valign='top'><div align='center'><b>E2B Pitch</b><br><br><a href='Results/English/variance_adaptor_plots/pitch/E2b_pitch.png'><img src='Results/English/variance_adaptor_plots/pitch/E2b_pitch.png' alt='E2B Pitch' width='100%'></a></div></td><td width='50%' valign='top'><i>Not available</i></td></tr>
+<tr><td width='50%' valign='top'><div align='center'><b>E3 Pitch</b><br><br><a href='Results/English/variance_adaptor_plots/pitch/E3_pitch.png'><img src='Results/English/variance_adaptor_plots/pitch/E3_pitch.png' alt='E3 Pitch' width='100%'></a></div></td><td width='50%' valign='top'><i>Not available</i></td></tr>
+<tr><td width='50%' valign='top'><div align='center'><b>E4 Pitch</b><br><br><a href='Results/English/variance_adaptor_plots/pitch/E4_pitch.png'><img src='Results/English/variance_adaptor_plots/pitch/E4_pitch.png' alt='E4 Pitch' width='100%'></a></div></td><td width='50%' valign='top'><i>Not available</i></td></tr>
+</tbody></table>
+
+### Energy Prediction
+
+<table width='100%'>
+<thead><tr>
+<th width='50%'>ENGLISH</th>
+<th width='50%'>TELUGU</th>
+</tr></thead><tbody>
+<tr><td width='50%' valign='top'><div align='center'><b>E1 Energy</b><br><br><a href='Results/English/variance_adaptor_plots/energy/E1_energy.png'><img src='Results/English/variance_adaptor_plots/energy/E1_energy.png' alt='E1 Energy' width='100%'></a></div></td><td width='50%' valign='top'><i>Not available</i></td></tr>
+<tr><td width='50%' valign='top'><div align='center'><b>E2A Energy</b><br><br><a href='Results/English/variance_adaptor_plots/energy/E2a_energy.png'><img src='Results/English/variance_adaptor_plots/energy/E2a_energy.png' alt='E2A Energy' width='100%'></a></div></td><td width='50%' valign='top'><i>Not available</i></td></tr>
+<tr><td width='50%' valign='top'><div align='center'><b>E2B Energy</b><br><br><a href='Results/English/variance_adaptor_plots/energy/E2b_energy.png'><img src='Results/English/variance_adaptor_plots/energy/E2b_energy.png' alt='E2B Energy' width='100%'></a></div></td><td width='50%' valign='top'><i>Not available</i></td></tr>
+<tr><td width='50%' valign='top'><div align='center'><b>E3 Energy</b><br><br><a href='Results/English/variance_adaptor_plots/energy/E3_energy.png'><img src='Results/English/variance_adaptor_plots/energy/E3_energy.png' alt='E3 Energy' width='100%'></a></div></td><td width='50%' valign='top'><i>Not available</i></td></tr>
+<tr><td width='50%' valign='top'><div align='center'><b>E4 Energy</b><br><br><a href='Results/English/variance_adaptor_plots/energy/E4_energy.png'><img src='Results/English/variance_adaptor_plots/energy/E4_energy.png' alt='E4 Energy' width='100%'></a></div></td><td width='50%' valign='top'><i>Not available</i></td></tr>
+</tbody></table>
+
+---
+
+## 3. Generated Speech Samples
+
+The audio outputs are grouped by language for convenient evaluation.
+
+<table width='100%'>
+<tr><th width='50%'>ENGLISH AUDIO</th><th width='50%'>TELUGU AUDIO</th></tr>
+<tr><td><a href='Results/English/test_generated_audios/E1.wav'>▶ E1.wav</a></td><td>—</td></tr>
+<tr><td><a href='Results/English/test_generated_audios/E2a.wav'>▶ E2a.wav</a></td><td>—</td></tr>
+<tr><td><a href='Results/English/test_generated_audios/E2b.wav'>▶ E2b.wav</a></td><td>—</td></tr>
+<tr><td><a href='Results/English/test_generated_audios/E3.wav'>▶ E3.wav</a></td><td>—</td></tr>
+<tr><td><a href='Results/English/test_generated_audios/E4.wav'>▶ E4.wav</a></td><td>—</td></tr>
+</table>
+
+---
+
+## 4. Result Inventory
+
+| Result | English | Telugu |
+|---|---:|---:|
+| Training loss graphs | 1 | 1 |
+| Validation loss graphs | 1 | 1 |
+| Variance adaptor plots | 15 | 0 |
+| Generated audio samples | 5 | 0 |
+
+## Installation
+
+### 1. Clone the repository
 
 ```bash
 git clone https://github.com/Hanushree29/fastspeech2-tts-english-telugu.git
 cd fastspeech2-tts-english-telugu
 ```
 
-Install dependencies:
+### 2. Install dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-A compatible Python and PyTorch environment, along with the
-required audio-processing dependencies, is needed.
+Use the Python and PyTorch versions compatible with the implementation and your hardware environment.
 
-## 8. Running the Pipelines
+## Reproducibility
 
-The English and Telugu pipelines are maintained independently.
+Each language implementation is maintained independently. For an experiment:
 
-### English
+1. Prepare the corresponding language dataset.
+2. Review the language-specific preprocessing configuration.
+3. Run the preprocessing pipeline.
+4. Review the model and training configuration.
+5. Train or load the relevant model checkpoint.
+6. Run inference using the language-specific pipeline.
+7. Save generated audio and experiment visualizations under `Results/`.
 
-```bash
-cd English
-python preprocess.py
-python train.py
-python inference.py
-```
+Consult the configuration files in each language directory for the actual parameter values. Download links for model checkpoints are provided above.
 
-### Telugu
+## Technical Report
 
-```bash
-cd Telugu
-python preprocess.py
-python train.py
-python inference.py
-```
+The `Report/` directory is reserved for the technical documentation of the implementation and experiments.
 
-Check each script's argument parser and language-specific YAML
-configuration before executing. Dataset paths and preprocessing
-artifacts must be configured for the local environment.
+## Acknowledgements
 
-## 9. Checkpoint Hosting
-
-Large model checkpoints are hosted externally rather than committed
-to GitHub.
-
-The checkpoint repositories provide access to the trained models
-and their respective training stages.
-
-## 10. Implementation Notes
-
-The implementation is based on the
-[ming024/FastSpeech2](https://github.com/ming024/FastSpeech2)
-reference repository.
-
-Language-specific adaptations include text processing,
-configuration management, dataset preparation, training,
-checkpoint handling, and inference.
-
-## 11. Limitations and Future Work
-
-The current implementations are experimental.
-
-Future improvements include:
-
-1. Improving speech naturalness and pronunciation.
-2. Better handling of long utterances.
-3. Expanding Telugu phoneme and pronunciation coverage.
-4. Improving number, date, and time normalization.
-5. Evaluating generalization across speakers and unseen sentences.
-6. Adding objective speech-quality metrics and human evaluation.
-
-## 12. References
-
-1. Ren et al. (2020), [FastSpeech 2: Fast and High-Quality End-to-End Text to Speech](https://arxiv.org/abs/2006.04558).
-2. [FastSpeech 2 reference implementation](https://github.com/ming024/FastSpeech2).
-3. [AI4Bharat Svarah dataset](https://huggingface.co/datasets/ai4bharat/Svarah).
-4. [AI4Bharat](https://ai4bharat.iitm.ac.in/).
-5. [HiFi-GAN](https://github.com/jik876/hifi-gan).
-
----
+- [FastSpeech 2](https://arxiv.org/abs/2006.04558) — Non-autoregressive speech synthesis architecture.
+- [AI4Bharat](https://ai4bharat.org/) — Indian-language AI research and resources.
+- [HiFi-GAN](https://github.com/jik876/hifi-gan) — Neural vocoder.
 
 ## Author
 
 **Hanushree M**
 
-B.E. Computer Science and Engineering
+[GitHub](https://github.com/Hanushree29)
 
-[GitHub Profile](https://github.com/Hanushree29)
+---
 
-[Project Repository](https://github.com/Hanushree29/fastspeech2-tts-english-telugu)
+<p align="center">
+  <b>Multilingual FastSpeech 2 · English & Telugu</b><br>
+  Research implementation and experimental outputs
+</p>
