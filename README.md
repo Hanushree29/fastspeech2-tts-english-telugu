@@ -367,3 +367,48 @@ The `Report/` directory is reserved for the technical documentation of the imple
   <b>Multilingual FastSpeech 2 · English & Telugu</b><br>
   Research implementation and experimental outputs
 </p>
+
+
+## Experiment Visualizations
+
+### Training and Validation Loss
+
+#### English
+
+![English Training Loss](Results/English/training_loss.png)
+
+![English Validation Loss](Results/English/validation_loss.png)
+
+#### Telugu
+
+![Telugu Training Loss](Results/Telugu/training_loss.png)
+
+![Telugu Validation Loss](Results/Telugu/validation_loss.png)
+
+### Telugu Model Analysis
+
+#### Model Weight Distribution
+
+![Model Weight Distribution](Results/Telugu/model_weight_distribution.png)
+
+#### Module Parameter Distribution
+
+![Module Parameter Distribution](Results/Telugu/module_parameter_distribution.png)
+
+### Variance Adaptor Analysis
+
+#### English
+
+![English Duration Predictions](Results/English/variance_adaptor_plots/duration/duration_comparison.png)
+
+![English Pitch Predictions](Results/English/variance_adaptor_plots/pitch/pitch_comparison.png)
+
+![English Energy Predictions](Results/English/variance_adaptor_plots/energy/energy_comparison.png)
+
+#### Telugu
+
+![Telugu Duration Predictions](Results/Telugu/variance_adaptor_plots/duration_comparison.png)
+
+![Telugu Pitch Predictions](Results/Telugu/variance_adaptor_plots/pitch_comparison.png)
+
+![Telugu Energy Predictions](Results/Telugu/variance_adaptor_plots/energy_comparison.png)
