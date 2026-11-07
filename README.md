@@ -449,3 +449,20 @@ The `Report/` directory is reserved for the technical documentation of the imple
   <b>Multilingual FastSpeech 2 · English & Telugu</b><br>
   Research implementation and experimental outputs
 </p>
+
+## Telugu Experiment Visual Gallery
+
+The following figures are generated from available Telugu training logs,
+verified checkpoint metadata, and actual generated audio files.
+
+### Checkpoint Progression
+
+![Checkpoint Progression](Results/Telugu/checkpoint_progression.png)
+
+### Training Loss
+
+![Training Loss](Results/Telugu/training_loss.png)
+
+### Validation Loss
+
+![Validation Loss](Results/Telugu/validation_loss.png)
