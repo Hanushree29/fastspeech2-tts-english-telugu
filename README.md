@@ -199,277 +199,120 @@ See [`English/checkpoints/`](English/checkpoints/) and [`Telugu/checkpoints/`](T
 
 ---
 
-## Experimental Results & Visual Gallery
+## Experimental Results and Visual Comparison
 
-Explore the training behaviour, generated speech samples, and
-variance-adaptor predictions for both language implementations.
+The experimental outputs are organized in parallel columns to facilitate direct inspection of the English and Telugu FastSpeech 2 implementations.
 
-<p align="center">
-<b>ENGLISH</b> &nbsp; | &nbsp; <b>TELUGU</b>
-</p>
+## 1. Training Performance
 
----
+### Training Loss
 
-## 1. Training & Validation Analysis
+<table width='100%'>
+<thead><tr>
+<th width='50%'>ENGLISH</th>
+<th width='50%'>TELUGU</th>
+</tr></thead><tbody>
+<tr><td width='50%' valign='top'><div align='center'><b>Training Loss</b><br><br><a href='Results/English/training_loss.png'><img src='Results/English/training_loss.png' alt='Training Loss' width='100%'></a></div></td><td width='50%' valign='top'><div align='center'><b>Training Loss</b><br><br><a href='Results/Telugu/training_loss.png'><img src='Results/Telugu/training_loss.png' alt='Training Loss' width='100%'></a></div></td></tr>
+</tbody></table>
 
-Training and validation curves provide a visual overview of model
-optimization and generalization behaviour.
+### Validation Loss
 
-### English
+<table width='100%'>
+<thead><tr>
+<th width='50%'>ENGLISH</th>
+<th width='50%'>TELUGU</th>
+</tr></thead><tbody>
+<tr><td width='50%' valign='top'><div align='center'><b>Validation Loss</b><br><br><a href='Results/English/validation_loss.png'><img src='Results/English/validation_loss.png' alt='Validation Loss' width='100%'></a></div></td><td width='50%' valign='top'><div align='center'><b>Validation Loss</b><br><br><a href='Results/Telugu/validation_loss.png'><img src='Results/Telugu/validation_loss.png' alt='Validation Loss' width='100%'></a></div></td></tr>
+</tbody></table>
 
-<details open>
-<summary><b>Training Loss</b></summary>
+### Additional Experiment Graphs
 
-<table width="100%">
-<tr>
-<td width="50%" align="center" valign="top"><b>Training Loss</b><br><br><img src="Results/English/training_loss.png" width="100%" alt="Training Loss"><br><sub><code>training_loss.png</code></sub></td>
-<td width="50%"></td>
-</tr>
-</table>
-
-</details>
-
-<details open>
-<summary><b>Validation Loss</b></summary>
-
-<table width="100%">
-<tr>
-<td width="50%" align="center" valign="top"><b>Validation Loss</b><br><br><img src="Results/English/validation_loss.png" width="100%" alt="Validation Loss"><br><sub><code>validation_loss.png</code></sub></td>
-<td width="50%"></td>
-</tr>
-</table>
-
-</details>
-
-<details>
-<summary><b>Additional Experiment Graphs</b></summary>
-
-<table width="100%">
-<tr>
-<td width="50%" align="center" valign="top"><b>Checkpoint Progression</b><br><br><img src="Results/English/checkpoint_progression.png" width="100%" alt="Checkpoint Progression"><br><sub><code>checkpoint_progression.png</code></sub></td>
-<td width="50%" align="center" valign="top"><b>E1 Spectrogram</b><br><br><img src="Results/English/test_generated_audios/E1_spectrogram.png" width="100%" alt="E1 Spectrogram"><br><sub><code>E1_spectrogram.png</code></sub></td>
-</tr>
-</table>
-
-<table width="100%">
-<tr>
-<td width="50%" align="center" valign="top"><b>E2A Spectrogram</b><br><br><img src="Results/English/test_generated_audios/E2a_spectrogram.png" width="100%" alt="E2A Spectrogram"><br><sub><code>E2a_spectrogram.png</code></sub></td>
-<td width="50%" align="center" valign="top"><b>E2B Spectrogram</b><br><br><img src="Results/English/test_generated_audios/E2b_spectrogram.png" width="100%" alt="E2B Spectrogram"><br><sub><code>E2b_spectrogram.png</code></sub></td>
-</tr>
-</table>
-
-<table width="100%">
-<tr>
-<td width="50%" align="center" valign="top"><b>E3 Spectrogram</b><br><br><img src="Results/English/test_generated_audios/E3_spectrogram.png" width="100%" alt="E3 Spectrogram"><br><sub><code>E3_spectrogram.png</code></sub></td>
-<td width="50%" align="center" valign="top"><b>E4 Spectrogram</b><br><br><img src="Results/English/test_generated_audios/E4_spectrogram.png" width="100%" alt="E4 Spectrogram"><br><sub><code>E4_spectrogram.png</code></sub></td>
-</tr>
-</table>
-
-<table width="100%">
-<tr>
-<td width="50%" align="center" valign="top"><b>E1 Duration</b><br><br><img src="Results/English/variance_adaptor_plots/duration/E1_duration.png" width="100%" alt="E1 Duration"><br><sub><code>E1_duration.png</code></sub></td>
-<td width="50%" align="center" valign="top"><b>E2A Duration</b><br><br><img src="Results/English/variance_adaptor_plots/duration/E2a_duration.png" width="100%" alt="E2A Duration"><br><sub><code>E2a_duration.png</code></sub></td>
-</tr>
-</table>
-
-<table width="100%">
-<tr>
-<td width="50%" align="center" valign="top"><b>E2B Duration</b><br><br><img src="Results/English/variance_adaptor_plots/duration/E2b_duration.png" width="100%" alt="E2B Duration"><br><sub><code>E2b_duration.png</code></sub></td>
-<td width="50%" align="center" valign="top"><b>E3 Duration</b><br><br><img src="Results/English/variance_adaptor_plots/duration/E3_duration.png" width="100%" alt="E3 Duration"><br><sub><code>E3_duration.png</code></sub></td>
-</tr>
-</table>
-
-<table width="100%">
-<tr>
-<td width="50%" align="center" valign="top"><b>E4 Duration</b><br><br><img src="Results/English/variance_adaptor_plots/duration/E4_duration.png" width="100%" alt="E4 Duration"><br><sub><code>E4_duration.png</code></sub></td>
-<td width="50%" align="center" valign="top"><b>E1 Energy</b><br><br><img src="Results/English/variance_adaptor_plots/energy/E1_energy.png" width="100%" alt="E1 Energy"><br><sub><code>E1_energy.png</code></sub></td>
-</tr>
-</table>
-
-<table width="100%">
-<tr>
-<td width="50%" align="center" valign="top"><b>E2A Energy</b><br><br><img src="Results/English/variance_adaptor_plots/energy/E2a_energy.png" width="100%" alt="E2A Energy"><br><sub><code>E2a_energy.png</code></sub></td>
-<td width="50%" align="center" valign="top"><b>E2B Energy</b><br><br><img src="Results/English/variance_adaptor_plots/energy/E2b_energy.png" width="100%" alt="E2B Energy"><br><sub><code>E2b_energy.png</code></sub></td>
-</tr>
-</table>
-
-<table width="100%">
-<tr>
-<td width="50%" align="center" valign="top"><b>E3 Energy</b><br><br><img src="Results/English/variance_adaptor_plots/energy/E3_energy.png" width="100%" alt="E3 Energy"><br><sub><code>E3_energy.png</code></sub></td>
-<td width="50%" align="center" valign="top"><b>E4 Energy</b><br><br><img src="Results/English/variance_adaptor_plots/energy/E4_energy.png" width="100%" alt="E4 Energy"><br><sub><code>E4_energy.png</code></sub></td>
-</tr>
-</table>
-
-<table width="100%">
-<tr>
-<td width="50%" align="center" valign="top"><b>E1 Pitch</b><br><br><img src="Results/English/variance_adaptor_plots/pitch/E1_pitch.png" width="100%" alt="E1 Pitch"><br><sub><code>E1_pitch.png</code></sub></td>
-<td width="50%" align="center" valign="top"><b>E2A Pitch</b><br><br><img src="Results/English/variance_adaptor_plots/pitch/E2a_pitch.png" width="100%" alt="E2A Pitch"><br><sub><code>E2a_pitch.png</code></sub></td>
-</tr>
-</table>
-
-<table width="100%">
-<tr>
-<td width="50%" align="center" valign="top"><b>E2B Pitch</b><br><br><img src="Results/English/variance_adaptor_plots/pitch/E2b_pitch.png" width="100%" alt="E2B Pitch"><br><sub><code>E2b_pitch.png</code></sub></td>
-<td width="50%" align="center" valign="top"><b>E3 Pitch</b><br><br><img src="Results/English/variance_adaptor_plots/pitch/E3_pitch.png" width="100%" alt="E3 Pitch"><br><sub><code>E3_pitch.png</code></sub></td>
-</tr>
-</table>
-
-<table width="100%">
-<tr>
-<td width="50%" align="center" valign="top"><b>E4 Pitch</b><br><br><img src="Results/English/variance_adaptor_plots/pitch/E4_pitch.png" width="100%" alt="E4 Pitch"><br><sub><code>E4_pitch.png</code></sub></td>
-<td width="50%"></td>
-</tr>
-</table>
-
-</details>
-
-### Telugu
-
-<details open>
-<summary><b>Training Loss</b></summary>
-
-<table width="100%">
-<tr>
-<td width="50%" align="center" valign="top"><b>Training Loss</b><br><br><img src="Results/Telugu/training_loss.png" width="100%" alt="Training Loss"><br><sub><code>training_loss.png</code></sub></td>
-<td width="50%"></td>
-</tr>
-</table>
-
-</details>
-
-<details open>
-<summary><b>Validation Loss</b></summary>
-
-<table width="100%">
-<tr>
-<td width="50%" align="center" valign="top"><b>Validation Loss</b><br><br><img src="Results/Telugu/validation_loss.png" width="100%" alt="Validation Loss"><br><sub><code>validation_loss.png</code></sub></td>
-<td width="50%"></td>
-</tr>
-</table>
-
-</details>
+<table width='100%'>
+<thead><tr>
+<th width='50%'>ENGLISH</th>
+<th width='50%'>TELUGU</th>
+</tr></thead><tbody>
+<tr><td width='50%' valign='top'><div align='center'><b>Checkpoint Progression</b><br><br><a href='Results/English/checkpoint_progression.png'><img src='Results/English/checkpoint_progression.png' alt='Checkpoint Progression' width='100%'></a></div></td><td width='50%' valign='top'><i>Not available</i></td></tr>
+<tr><td width='50%' valign='top'><div align='center'><b>E1 Spectrogram</b><br><br><a href='Results/English/test_generated_audios/E1_spectrogram.png'><img src='Results/English/test_generated_audios/E1_spectrogram.png' alt='E1 Spectrogram' width='100%'></a></div></td><td width='50%' valign='top'><i>Not available</i></td></tr>
+<tr><td width='50%' valign='top'><div align='center'><b>E2A Spectrogram</b><br><br><a href='Results/English/test_generated_audios/E2a_spectrogram.png'><img src='Results/English/test_generated_audios/E2a_spectrogram.png' alt='E2A Spectrogram' width='100%'></a></div></td><td width='50%' valign='top'><i>Not available</i></td></tr>
+<tr><td width='50%' valign='top'><div align='center'><b>E2B Spectrogram</b><br><br><a href='Results/English/test_generated_audios/E2b_spectrogram.png'><img src='Results/English/test_generated_audios/E2b_spectrogram.png' alt='E2B Spectrogram' width='100%'></a></div></td><td width='50%' valign='top'><i>Not available</i></td></tr>
+<tr><td width='50%' valign='top'><div align='center'><b>E3 Spectrogram</b><br><br><a href='Results/English/test_generated_audios/E3_spectrogram.png'><img src='Results/English/test_generated_audios/E3_spectrogram.png' alt='E3 Spectrogram' width='100%'></a></div></td><td width='50%' valign='top'><i>Not available</i></td></tr>
+<tr><td width='50%' valign='top'><div align='center'><b>E4 Spectrogram</b><br><br><a href='Results/English/test_generated_audios/E4_spectrogram.png'><img src='Results/English/test_generated_audios/E4_spectrogram.png' alt='E4 Spectrogram' width='100%'></a></div></td><td width='50%' valign='top'><i>Not available</i></td></tr>
+</tbody></table>
 
 ---
 
-## 2. Variance Adaptor Visualizations
+## 2. Variance Adaptor Analysis
 
-FastSpeech 2 models speech-related variation through three important
-predictors: duration, pitch, and energy.
+The following plots present the variance-adaptor outputs for duration, pitch, and energy.
 
-### English — Variance Analysis
+### Duration Prediction
 
-<details>
-<summary><b>Duration</b> — 5 visualization(s)</summary>
+<table width='100%'>
+<thead><tr>
+<th width='50%'>ENGLISH</th>
+<th width='50%'>TELUGU</th>
+</tr></thead><tbody>
+<tr><td width='50%' valign='top'><div align='center'><b>E1 Duration</b><br><br><a href='Results/English/variance_adaptor_plots/duration/E1_duration.png'><img src='Results/English/variance_adaptor_plots/duration/E1_duration.png' alt='E1 Duration' width='100%'></a></div></td><td width='50%' valign='top'><i>Not available</i></td></tr>
+<tr><td width='50%' valign='top'><div align='center'><b>E2A Duration</b><br><br><a href='Results/English/variance_adaptor_plots/duration/E2a_duration.png'><img src='Results/English/variance_adaptor_plots/duration/E2a_duration.png' alt='E2A Duration' width='100%'></a></div></td><td width='50%' valign='top'><i>Not available</i></td></tr>
+<tr><td width='50%' valign='top'><div align='center'><b>E2B Duration</b><br><br><a href='Results/English/variance_adaptor_plots/duration/E2b_duration.png'><img src='Results/English/variance_adaptor_plots/duration/E2b_duration.png' alt='E2B Duration' width='100%'></a></div></td><td width='50%' valign='top'><i>Not available</i></td></tr>
+<tr><td width='50%' valign='top'><div align='center'><b>E3 Duration</b><br><br><a href='Results/English/variance_adaptor_plots/duration/E3_duration.png'><img src='Results/English/variance_adaptor_plots/duration/E3_duration.png' alt='E3 Duration' width='100%'></a></div></td><td width='50%' valign='top'><i>Not available</i></td></tr>
+<tr><td width='50%' valign='top'><div align='center'><b>E4 Duration</b><br><br><a href='Results/English/variance_adaptor_plots/duration/E4_duration.png'><img src='Results/English/variance_adaptor_plots/duration/E4_duration.png' alt='E4 Duration' width='100%'></a></div></td><td width='50%' valign='top'><i>Not available</i></td></tr>
+</tbody></table>
 
-<table width="100%">
-<tr>
-<td width="50%" align="center" valign="top"><b>E1 Duration</b><br><br><img src="Results/English/variance_adaptor_plots/duration/E1_duration.png" width="100%" alt="E1 Duration"><br><sub><code>E1_duration.png</code></sub></td>
-<td width="50%" align="center" valign="top"><b>E2A Duration</b><br><br><img src="Results/English/variance_adaptor_plots/duration/E2a_duration.png" width="100%" alt="E2A Duration"><br><sub><code>E2a_duration.png</code></sub></td>
-</tr>
-</table>
+### Pitch Prediction
 
-<table width="100%">
-<tr>
-<td width="50%" align="center" valign="top"><b>E2B Duration</b><br><br><img src="Results/English/variance_adaptor_plots/duration/E2b_duration.png" width="100%" alt="E2B Duration"><br><sub><code>E2b_duration.png</code></sub></td>
-<td width="50%" align="center" valign="top"><b>E3 Duration</b><br><br><img src="Results/English/variance_adaptor_plots/duration/E3_duration.png" width="100%" alt="E3 Duration"><br><sub><code>E3_duration.png</code></sub></td>
-</tr>
-</table>
+<table width='100%'>
+<thead><tr>
+<th width='50%'>ENGLISH</th>
+<th width='50%'>TELUGU</th>
+</tr></thead><tbody>
+<tr><td width='50%' valign='top'><div align='center'><b>E1 Pitch</b><br><br><a href='Results/English/variance_adaptor_plots/pitch/E1_pitch.png'><img src='Results/English/variance_adaptor_plots/pitch/E1_pitch.png' alt='E1 Pitch' width='100%'></a></div></td><td width='50%' valign='top'><i>Not available</i></td></tr>
+<tr><td width='50%' valign='top'><div align='center'><b>E2A Pitch</b><br><br><a href='Results/English/variance_adaptor_plots/pitch/E2a_pitch.png'><img src='Results/English/variance_adaptor_plots/pitch/E2a_pitch.png' alt='E2A Pitch' width='100%'></a></div></td><td width='50%' valign='top'><i>Not available</i></td></tr>
+<tr><td width='50%' valign='top'><div align='center'><b>E2B Pitch</b><br><br><a href='Results/English/variance_adaptor_plots/pitch/E2b_pitch.png'><img src='Results/English/variance_adaptor_plots/pitch/E2b_pitch.png' alt='E2B Pitch' width='100%'></a></div></td><td width='50%' valign='top'><i>Not available</i></td></tr>
+<tr><td width='50%' valign='top'><div align='center'><b>E3 Pitch</b><br><br><a href='Results/English/variance_adaptor_plots/pitch/E3_pitch.png'><img src='Results/English/variance_adaptor_plots/pitch/E3_pitch.png' alt='E3 Pitch' width='100%'></a></div></td><td width='50%' valign='top'><i>Not available</i></td></tr>
+<tr><td width='50%' valign='top'><div align='center'><b>E4 Pitch</b><br><br><a href='Results/English/variance_adaptor_plots/pitch/E4_pitch.png'><img src='Results/English/variance_adaptor_plots/pitch/E4_pitch.png' alt='E4 Pitch' width='100%'></a></div></td><td width='50%' valign='top'><i>Not available</i></td></tr>
+</tbody></table>
 
-<table width="100%">
-<tr>
-<td width="50%" align="center" valign="top"><b>E4 Duration</b><br><br><img src="Results/English/variance_adaptor_plots/duration/E4_duration.png" width="100%" alt="E4 Duration"><br><sub><code>E4_duration.png</code></sub></td>
-<td width="50%"></td>
-</tr>
-</table>
+### Energy Prediction
 
-</details>
-
-<details>
-<summary><b>Pitch</b> — 5 visualization(s)</summary>
-
-<table width="100%">
-<tr>
-<td width="50%" align="center" valign="top"><b>E1 Pitch</b><br><br><img src="Results/English/variance_adaptor_plots/pitch/E1_pitch.png" width="100%" alt="E1 Pitch"><br><sub><code>E1_pitch.png</code></sub></td>
-<td width="50%" align="center" valign="top"><b>E2A Pitch</b><br><br><img src="Results/English/variance_adaptor_plots/pitch/E2a_pitch.png" width="100%" alt="E2A Pitch"><br><sub><code>E2a_pitch.png</code></sub></td>
-</tr>
-</table>
-
-<table width="100%">
-<tr>
-<td width="50%" align="center" valign="top"><b>E2B Pitch</b><br><br><img src="Results/English/variance_adaptor_plots/pitch/E2b_pitch.png" width="100%" alt="E2B Pitch"><br><sub><code>E2b_pitch.png</code></sub></td>
-<td width="50%" align="center" valign="top"><b>E3 Pitch</b><br><br><img src="Results/English/variance_adaptor_plots/pitch/E3_pitch.png" width="100%" alt="E3 Pitch"><br><sub><code>E3_pitch.png</code></sub></td>
-</tr>
-</table>
-
-<table width="100%">
-<tr>
-<td width="50%" align="center" valign="top"><b>E4 Pitch</b><br><br><img src="Results/English/variance_adaptor_plots/pitch/E4_pitch.png" width="100%" alt="E4 Pitch"><br><sub><code>E4_pitch.png</code></sub></td>
-<td width="50%"></td>
-</tr>
-</table>
-
-</details>
-
-<details>
-<summary><b>Energy</b> — 5 visualization(s)</summary>
-
-<table width="100%">
-<tr>
-<td width="50%" align="center" valign="top"><b>E1 Energy</b><br><br><img src="Results/English/variance_adaptor_plots/energy/E1_energy.png" width="100%" alt="E1 Energy"><br><sub><code>E1_energy.png</code></sub></td>
-<td width="50%" align="center" valign="top"><b>E2A Energy</b><br><br><img src="Results/English/variance_adaptor_plots/energy/E2a_energy.png" width="100%" alt="E2A Energy"><br><sub><code>E2a_energy.png</code></sub></td>
-</tr>
-</table>
-
-<table width="100%">
-<tr>
-<td width="50%" align="center" valign="top"><b>E2B Energy</b><br><br><img src="Results/English/variance_adaptor_plots/energy/E2b_energy.png" width="100%" alt="E2B Energy"><br><sub><code>E2b_energy.png</code></sub></td>
-<td width="50%" align="center" valign="top"><b>E3 Energy</b><br><br><img src="Results/English/variance_adaptor_plots/energy/E3_energy.png" width="100%" alt="E3 Energy"><br><sub><code>E3_energy.png</code></sub></td>
-</tr>
-</table>
-
-<table width="100%">
-<tr>
-<td width="50%" align="center" valign="top"><b>E4 Energy</b><br><br><img src="Results/English/variance_adaptor_plots/energy/E4_energy.png" width="100%" alt="E4 Energy"><br><sub><code>E4_energy.png</code></sub></td>
-<td width="50%"></td>
-</tr>
-</table>
-
-</details>
-
-### Telugu — Variance Analysis
-
-_No variance-adaptor plots found yet._
+<table width='100%'>
+<thead><tr>
+<th width='50%'>ENGLISH</th>
+<th width='50%'>TELUGU</th>
+</tr></thead><tbody>
+<tr><td width='50%' valign='top'><div align='center'><b>E1 Energy</b><br><br><a href='Results/English/variance_adaptor_plots/energy/E1_energy.png'><img src='Results/English/variance_adaptor_plots/energy/E1_energy.png' alt='E1 Energy' width='100%'></a></div></td><td width='50%' valign='top'><i>Not available</i></td></tr>
+<tr><td width='50%' valign='top'><div align='center'><b>E2A Energy</b><br><br><a href='Results/English/variance_adaptor_plots/energy/E2a_energy.png'><img src='Results/English/variance_adaptor_plots/energy/E2a_energy.png' alt='E2A Energy' width='100%'></a></div></td><td width='50%' valign='top'><i>Not available</i></td></tr>
+<tr><td width='50%' valign='top'><div align='center'><b>E2B Energy</b><br><br><a href='Results/English/variance_adaptor_plots/energy/E2b_energy.png'><img src='Results/English/variance_adaptor_plots/energy/E2b_energy.png' alt='E2B Energy' width='100%'></a></div></td><td width='50%' valign='top'><i>Not available</i></td></tr>
+<tr><td width='50%' valign='top'><div align='center'><b>E3 Energy</b><br><br><a href='Results/English/variance_adaptor_plots/energy/E3_energy.png'><img src='Results/English/variance_adaptor_plots/energy/E3_energy.png' alt='E3 Energy' width='100%'></a></div></td><td width='50%' valign='top'><i>Not available</i></td></tr>
+<tr><td width='50%' valign='top'><div align='center'><b>E4 Energy</b><br><br><a href='Results/English/variance_adaptor_plots/energy/E4_energy.png'><img src='Results/English/variance_adaptor_plots/energy/E4_energy.png' alt='E4 Energy' width='100%'></a></div></td><td width='50%' valign='top'><i>Not available</i></td></tr>
+</tbody></table>
 
 ---
 
 ## 3. Generated Speech Samples
 
-The following files are the generated audio outputs available in the repository.
+The audio outputs are grouped by language for convenient evaluation.
 
-### English Speech Samples
-
-| Sample | Audio file |
-|---|---|
-| Sample 1 | [▶ Listen / Open](Results/English/test_generated_audios/E1.wav) |
-| Sample 2 | [▶ Listen / Open](Results/English/test_generated_audios/E2a.wav) |
-| Sample 3 | [▶ Listen / Open](Results/English/test_generated_audios/E2b.wav) |
-| Sample 4 | [▶ Listen / Open](Results/English/test_generated_audios/E3.wav) |
-| Sample 5 | [▶ Listen / Open](Results/English/test_generated_audios/E4.wav) |
-
-
-### Telugu Speech Samples
-
-_No generated audio files found yet._
-
+<table width='100%'>
+<tr><th width='50%'>ENGLISH AUDIO</th><th width='50%'>TELUGU AUDIO</th></tr>
+<tr><td><a href='Results/English/test_generated_audios/E1.wav'>▶ E1.wav</a></td><td>—</td></tr>
+<tr><td><a href='Results/English/test_generated_audios/E2a.wav'>▶ E2a.wav</a></td><td>—</td></tr>
+<tr><td><a href='Results/English/test_generated_audios/E2b.wav'>▶ E2b.wav</a></td><td>—</td></tr>
+<tr><td><a href='Results/English/test_generated_audios/E3.wav'>▶ E3.wav</a></td><td>—</td></tr>
+<tr><td><a href='Results/English/test_generated_audios/E4.wav'>▶ E4.wav</a></td><td>—</td></tr>
+</table>
 
 ---
 
-## 4. Results Directory
+## 4. Result Inventory
 
-| Language | Training graphs | Variance plots | Audio samples |
-|---|---:|---:|---:|
-| English | 23 | 15 | 5 |
-| Telugu | 2 | 0 | 0 |
+| Result | English | Telugu |
+|---|---:|---:|
+| Training loss graphs | 1 | 1 |
+| Validation loss graphs | 1 | 1 |
+| Variance adaptor plots | 15 | 0 |
+| Generated audio samples | 5 | 0 |
 
 ## Installation
 
